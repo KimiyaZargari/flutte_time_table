@@ -78,10 +78,15 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
     state = _Loaded();
   }
 
-  blockSlot(Slot slot) {
-    reservations[slot.field]!.add(ReservationEntity(
-        status: ReservationStatus.blocked, fromTime: slot.fromTime));
+
+
+  blockSlots(List<Slot> slots) {
+    for (var slot in slots) {
+      reservations[slot.field]!.add(ReservationEntity(
+          status: ReservationStatus.blocked, fromTime: slot.fromTime));
+    }
     state = TimeTableState.loaded();
+
   }
 
   selectSlot(Slot slot) {
@@ -99,4 +104,6 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
       throw Exception('Selecting items before data is loaded!');
     });
   }
+
+  cancelSelection() => state = _Loaded();
 }

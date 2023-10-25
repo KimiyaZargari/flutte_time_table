@@ -96,6 +96,10 @@ class TimeTablePage extends ConsumerWidget {
                                                     notifier
                                                         .selectSlot(emptySlot);
                                                   },
+                                                  onDoubleTap: () {
+                                                    notifier
+                                                        .selectSlot(emptySlot);
+                                                  },
                                                   onTap: () {
                                                     state.mapOrNull(
                                                         loaded: (_) {
@@ -108,8 +112,8 @@ class TimeTablePage extends ConsumerWidget {
                                                         if (value ==
                                                             ReservationStatus
                                                                 .blocked) {
-                                                          notifier.blockSlot(
-                                                              emptySlot);
+                                                          notifier.blockSlots(
+                                                              [emptySlot]);
                                                         }
                                                       });
                                                     }, selecting: (_) {
@@ -194,6 +198,19 @@ class TimeTablePage extends ConsumerWidget {
           state.maybeMap(
               orElse: () => Container(),
               selecting: (selectingState) => SelectingSlotsRow(
+                  onAccepted: () {
+                    showDialog<ReservationStatus>(
+                            context: context,
+                            builder: (_) => const ReserveBlockDialog())
+                        .then((value) {
+                      if (value == ReservationStatus.blocked) {
+                        notifier.blockSlots(selectingState.selectedItems);
+                      }
+                    });
+                  },
+                  onCancelled: () {
+                    notifier.cancelSelection();
+                  },
                   selectedLength: selectingState.selectedItems.length))
         ],
       ),

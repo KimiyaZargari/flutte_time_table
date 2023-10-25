@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 
 class SelectingSlotsRow extends StatelessWidget {
   final int selectedLength;
+  final Function() onCancelled, onAccepted;
 
-  const SelectingSlotsRow({required this.selectedLength, Key? key})
+  const SelectingSlotsRow(
+      {required this.onAccepted,
+      required this.onCancelled,
+      required this.selectedLength,
+      Key? key})
       : super(key: key);
 
   @override
@@ -24,11 +29,16 @@ class SelectingSlotsRow extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(child: OutlinedButton(onPressed: () {}, child: const Text('لغو'))),
+                  Expanded(
+                      child: OutlinedButton(
+                          onPressed: onCancelled, child: const Text('لغو'))),
                   const SizedBox(
                     width: 10,
                   ),
-                  Expanded(child: ElevatedButton(onPressed: () {}, child: const Text('تایید'))),
+                  Expanded(
+                      child: ElevatedButton(
+                          onPressed: selectedLength == 0 ? null : onAccepted,
+                          child: const Text('تایید'))),
                 ],
               ),
             )
