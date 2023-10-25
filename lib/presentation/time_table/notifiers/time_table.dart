@@ -87,8 +87,9 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
   selectSlot(Slot slot) {
     state.map(selecting: (selectingState) {
       if (selectingState.selectedItems.contains(slot)) {
-        selectingState.selectedItems.remove(slot);
-        state = _Selecting([...selectingState.selectedItems]);
+        var temp = [...selectingState.selectedItems];
+        temp.remove(slot);
+        state = _Selecting([...temp]);
       } else {
         state = _Selecting([slot, ...selectingState.selectedItems]);
       }
