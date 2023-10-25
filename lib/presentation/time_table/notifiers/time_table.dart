@@ -28,19 +28,18 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
             userName: 'زرگری'),
         ReservationEntity(
             status: ReservationStatus.onSiteReservation,
-            fromTime: 8,
+            fromTime: 9,
             price: 30000,
             userName: 'مرادی'),
         ReservationEntity(
             status: ReservationStatus.onlineReservation,
-            fromTime: 10,
+            fromTime: 16,
             price: 30000,
             userName: 'ابراهیمی'),
         ReservationEntity(
-            status: ReservationStatus.package,
-            fromTime: 13,
-            price: 30000,
-            userName: 'تهرانی'),
+          status: ReservationStatus.blocked,
+          fromTime: 13,
+        ),
       ],
       'زمین 2': [
         ReservationEntity(
@@ -59,7 +58,7 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
             price: 30000,
             userName: 'رنجبر'),
         ReservationEntity(
-            status: ReservationStatus.package,
+            status: ReservationStatus.onSiteReservation,
             fromTime: 23,
             price: 30000,
             userName: 'ابراهیمی'),
@@ -78,15 +77,12 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
     state = _Loaded();
   }
 
-
-
   blockSlots(List<Slot> slots) {
     for (var slot in slots) {
       reservations[slot.field]!.add(ReservationEntity(
           status: ReservationStatus.blocked, fromTime: slot.fromTime));
     }
     state = TimeTableState.loaded();
-
   }
 
   selectSlot(Slot slot) {
@@ -103,6 +99,13 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
     }, initial: (_Initial value) {
       throw Exception('Selecting items before data is loaded!');
     });
+  }
+
+  addReservations(Map<String, List<ReservationEntity>> reservationsToAdd) {
+    for (var e in reservationsToAdd.entries) {
+      reservations[e.key]!.addAll(e.value);
+    }
+    state = _Loaded();
   }
 
   cancelSelection() => state = _Loaded();

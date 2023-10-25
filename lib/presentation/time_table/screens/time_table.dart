@@ -2,14 +2,14 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:time_table/domain/reservation/reservation.dart';
-import 'package:time_table/domain/time_table/slot.dart';
 import 'package:time_table/presentation/core/widgets/loading_widget.dart';
 import 'package:time_table/presentation/time_table/notifiers/time_table.dart';
 import 'package:time_table/presentation/time_table/widgets/dialogs/reserve_block_dialog.dart';
+import 'package:time_table/presentation/time_table/widgets/field_reservations.dart';
 import 'package:time_table/presentation/time_table/widgets/selecting_slots_row.dart';
 import 'package:time_table/presentation/time_table/widgets/status_row.dart';
-import '../widgets/dialogs/move_reservation.dart';
-import '../widgets/reservation_card.dart';
+
+import '../widgets/dialogs/reserve_form_dialog.dart';
 
 @RoutePage()
 class TimeTablePage extends ConsumerWidget {
@@ -70,123 +70,14 @@ class TimeTablePage extends ConsumerWidget {
                                 child: Row(
                                   children: notifier.reservations.keys
                                       .map(
-                                        (field) => Expanded(
-                                            child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: Iterable<int>.generate(18)
-                                              .map((index) {
-                                            final reservation = notifier
-                                                .reservations[field]!
-                                                .where((element) =>
-                                                    element.fromTime ==
-                                                    index + 6);
-                                            if (reservation.isEmpty ||
-                                                reservation.first.status ==
-                                                    ReservationStatus.free) {
-                                              final emptySlot = Slot(
-                                                  field: field,
-                                                  fromTime: index + 6);
-                                              return DragTarget<Slot>(
-                                                builder: (_, __, ___) =>
-                                                    GestureDetector(
-                                                  onLongPressStart: (_) {
-                                                    notifier
-                                                        .selectSlot(emptySlot);
-                                                  },
-                                                  onDoubleTap: () {
-                                                    notifier
-                                                        .selectSlot(emptySlot);
-                                                  },
-                                                  onTap: () {
-                                                    state.mapOrNull(
-                                                        loaded: (_) {
-                                                      showDialog<
-                                                              ReservationStatus>(
-                                                          context: context,
-                                                          builder: (_) =>
-                                                              const ReserveBlockDialog()).then(
-                                                          (value) {
-                                                        if (value ==
-                                                            ReservationStatus
-                                                                .blocked) {
-                                                          notifier.blockSlots(
-                                                              [emptySlot]);
-                                                        }
-                                                      });
-                                                    }, selecting: (_) {
-                                                      notifier.selectSlot(
-                                                          emptySlot);
-                                                    });
-                                                  },
-                                                  child: ReservationCard(
-                                                    reservation.isEmpty
-                                                        ? ReservationEntity(
-                                                            fromTime: index + 6,
-                                                            status:
-                                                                ReservationStatus
-                                                                    .free)
-                                                        : reservation.first,
-                                                    isSelected: state.maybeMap(
-                                                        orElse: () => false,
-                                                        selecting: (state) {
-                                                          return state
-                                                              .selectedItems
-                                                              .contains(
-                                                                  emptySlot);
-                                                        }),
-                                                  ),
-                                                ),
-                                                onWillAccept: (_) {
-                                                  return true;
-                                                },
-                                                onAccept: (from) {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (_) =>
-                                                          MoveReservationDialog(
-                                                              from: from,
-                                                              to: emptySlot)).then(
-                                                      (value) {
-                                                    if (value) {
-                                                      notifier.switchSlots(
-                                                          from, emptySlot);
-                                                    }
-                                                  });
-                                                },
-                                              );
-                                            } else {
-                                              return Draggable<Slot>(
-                                                data: Slot(
-                                                    fromTime: reservation
-                                                        .first.fromTime,
-                                                    field: field),
-                                                feedback: SizedBox(
-                                                  width: 400,
-                                                  child: ReservationCard(
-                                                      reservation.first),
-                                                ),
-                                                childWhenDragging:
-                                                    const SizedBox(
-                                                        height: 76,
-                                                        child: Card(
-                                                            color: Colors
-                                                                .black38)),
-                                                child: ReservationCard(
-                                                    reservation.first),
-                                              );
-                                            }
-                                          }).toList(),
-                                        )),
+                                        (field) => FieldSlots(
+                                            state: state,
+                                            field: field,
+                                            notifier: notifier),
                                       )
                                       .toList(),
                                 ),
                               ),
-                              SizedBox(
-                                width: 20,
-                              )
                             ],
                           )),
                     ),
@@ -196,7 +87,9 @@ class TimeTablePage extends ConsumerWidget {
             ),
           ),
           state.maybeMap(
-              orElse: () => Container(),
+              orElse: () => const SizedBox(
+                    height: 20,
+                  ),
               selecting: (selectingState) => SelectingSlotsRow(
                   onAccepted: () {
                     showDialog<ReservationStatus>(
@@ -205,6 +98,16 @@ class TimeTablePage extends ConsumerWidget {
                         .then((value) {
                       if (value == ReservationStatus.blocked) {
                         notifier.blockSlots(selectingState.selectedItems);
+                      } else if (value == ReservationStatus.onSiteReservation) {
+                        showDialog<Map<String, List<ReservationEntity>>>(
+                                context: context,
+                                builder: (_) => ReserveFormDialog(
+                                    selectingState.selectedItems))
+                            .then((newReservations) {
+                          if (newReservations != null) {
+                            notifier.addReservations(newReservations);
+                          }
+                        });
                       }
                     });
                   },

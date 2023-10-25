@@ -17,8 +17,7 @@ enum ReservationStatus {
   onlineReservation,
   onSiteReservation,
   blocked,
-  free,
-  package;
+  free;
 
   @override
   String toString() {
@@ -29,13 +28,11 @@ enum ReservationStatus {
         return 'رزرو در محل';
 
       case ReservationStatus.blocked:
-        return 'بلاک';
+        return 'مسدود';
 
       case ReservationStatus.free:
         return 'آزاد';
 
-      case ReservationStatus.package:
-        return 'پکیج گروهی';
     }
   }
 
@@ -46,11 +43,9 @@ enum ReservationStatus {
       case ReservationStatus.onSiteReservation:
         return Colors.blueAccent;
       case ReservationStatus.blocked:
-        return Colors.redAccent;
+        return Colors.orangeAccent;
       case ReservationStatus.free:
         return Colors.white54;
-      case ReservationStatus.package:
-        return Colors.limeAccent;
     }
   }
 
@@ -61,8 +56,6 @@ enum ReservationStatus {
       return ReservationStatus.onlineReservation;
     } else if (status == 3) {
       return ReservationStatus.onSiteReservation;
-    } else if (status == 4) {
-      return ReservationStatus.package;
     }
     return ReservationStatus.blocked;
   }

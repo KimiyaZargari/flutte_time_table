@@ -37,7 +37,7 @@ class ReserveBlockDialog extends StatelessWidget {
                     child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.error),
-                  child: const Text('بلاک'),
+                  child: Text(ReservationStatus.blocked.toString()),
                   onPressed: () {
                     context.router.pop(ReservationStatus.blocked);
                   },

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:time_table/domain/reservation/reservation.dart';
+import 'package:time_table/presentation/core/config/strings.dart';
 
 class ReservationCard extends StatelessWidget {
   final ReservationEntity reservationModel;
@@ -38,18 +39,12 @@ class ReservationCard extends StatelessWidget {
                 );
 
               case ReservationStatus.blocked:
-                return Container();
+                return Center(child: const Text(AppStrings.slotIsBlocked));
 
               case ReservationStatus.free:
                 return Container();
 
-              case ReservationStatus.package:
-                return Column(
-                  children: [
-                    Text(reservationModel.userName ?? ''),
-                    //todo implemet
-                  ],
-                );
+
             }
           })),
     );
