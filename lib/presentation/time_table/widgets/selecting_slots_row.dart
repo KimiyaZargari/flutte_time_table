@@ -24,7 +24,7 @@ class SelectingSlotsRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-                flex: 3, child: Text('$selectedLength سانس انتخواب شده است.')),
+                flex: 3, child: Text('$selectedLength سانس انتخاب شده است.')),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
