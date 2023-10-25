@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routerConfig: _appRouter.config(),
         localizationsDelegates: const [
         GlobalCupertinoLocalizations.delegate,
