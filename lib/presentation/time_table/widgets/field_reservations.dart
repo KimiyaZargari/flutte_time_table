@@ -101,7 +101,7 @@ class FieldSlots extends StatelessWidget {
           return Draggable<Slot>(
             data: Slot(fromTime: reservation.first.fromTime, field: field),
             feedback: SizedBox(
-              width: 400,
+              width: (MediaQuery.of(context).size.width - 160)/2,
               child: ReservationCard(reservation.first),
             ),
             childWhenDragging:

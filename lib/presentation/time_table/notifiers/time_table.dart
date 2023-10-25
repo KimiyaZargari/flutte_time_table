@@ -22,7 +22,7 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
     reservations = {
       'زمین 1': [
         ReservationEntity(
-            status: ReservationStatus.onSiteReservation,
+            status: ReservationStatus.onlineReservation,
             fromTime: 8,
             price: 30000,
             userName: 'زرگری'),

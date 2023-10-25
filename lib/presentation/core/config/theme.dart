@@ -20,8 +20,8 @@ TextTheme _textTheme(TextTheme base) {
         fontFamily: 'Vazir',
         fontWeight: FontWeight.w500,
         color: AppColors.lightThemeTextColor),
-    displayMedium: const TextStyle(
-        fontSize: 18,
+    displayLarge: const TextStyle(
+        fontSize: 24,
         fontFamily: 'Vazir',
         fontWeight: FontWeight.w500,
         color: AppColors.darkThemeTextColor),
@@ -82,7 +82,7 @@ TextTheme _primaryTextTheme(TextTheme base) {
 ThemeData lightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-      scaffoldBackgroundColor: AppColors.lightBackground,
+      scaffoldBackgroundColor: AppColors.primaryColor,
       textTheme: _textTheme(base.textTheme),
       primaryTextTheme: _primaryTextTheme(base.textTheme),
       primaryColor: AppColors.primaryColor,

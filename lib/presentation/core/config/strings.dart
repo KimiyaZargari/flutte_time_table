@@ -2,6 +2,7 @@
 class AppStrings {
   AppStrings._();
 
+  static const fieldsSchedule = 'برنامه زمین ها';
   static const clientName = 'نام مشتری';
   static const price = 'قیمت';
   static const accept = 'تایید';
