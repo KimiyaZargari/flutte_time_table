@@ -9,5 +9,6 @@ class AppStrings {
   static const reserveSession = 'رزرو سانس';
   static const slotIsBlocked = 'این سانس مسدود می باشد!';
   static const necessaryField = 'این فیلد الزامیست!';
+  static const unblock =  'رفع مسدودیت';
 
 }

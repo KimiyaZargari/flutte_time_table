@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:time_table/domain/reservation/reservation.dart';
 import 'package:time_table/presentation/time_table/notifiers/time_table.dart';
 import 'package:time_table/presentation/time_table/widgets/dialogs/reserve_form_dialog.dart';
+import 'package:time_table/presentation/time_table/widgets/dialogs/unblock_stol_dialog.dart';
 import 'package:time_table/presentation/time_table/widgets/reservation_card.dart';
 
 import '../../../domain/time_table/slot.dart';
@@ -85,7 +86,17 @@ class FieldSlots extends StatelessWidget {
             },
           );
         } else if (reservation.first.status == ReservationStatus.blocked) {
-          return ReservationCard(reservation.first);
+          return GestureDetector(
+              onTap: () {
+                showDialog<bool>(
+                    context: context,
+                    builder: (_) => const UnblockSlotDialog()).then((value) {
+                  if (value?? false) {
+                    notifier.unblockSlot(reservation.first, field);
+                  }
+                });
+              },
+              child: ReservationCard(reservation.first));
         } else {
           return Draggable<Slot>(
             data: Slot(fromTime: reservation.first.fromTime, field: field),

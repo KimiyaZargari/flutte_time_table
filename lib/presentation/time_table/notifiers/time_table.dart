@@ -85,6 +85,13 @@ class TimeTableNotifier extends StateNotifier<TimeTableState> {
     state = TimeTableState.loaded();
   }
 
+  unblockSlot(ReservationEntity reservation, String field) {
+
+      reservations[field]!.remove(reservation);
+
+    state = TimeTableState.loaded();
+  }
+
   selectSlot(Slot slot) {
     state.map(selecting: (selectingState) {
       if (selectingState.selectedItems.contains(slot)) {
